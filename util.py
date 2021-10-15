@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-from sklearn.preprocessing import OneHotEncoder
 
 ALPHABET = ["A", "C", "G", "T"]
 
@@ -23,13 +22,10 @@ def load_data(data_path: str) -> pd.DataFrame:
 
 
 def encode_onehot(data: pd.DataFrame):
-    encoder = OneHotEncoder(sparse=False)
     encoded_data = []
+    mapping = {letter: i for i, letter in enumerate(ALPHABET)}
     for index, sequence in enumerate(data['sequence'].values):
-        if index == 0:
-            encoded_sequence = encoder.fit_transform(np.array(list(sequence)).reshape(-1, 1))
-        else:
-            encoded_sequence = encoder.transform(np.array(list(sequence)).reshape(-1, 1))
+        encoded_sequence = np.eye(len(ALPHABET))[[mapping[letter] for letter in sequence]]
         encoded_data.append(encoded_sequence.flatten())
 
     feature_names = []
