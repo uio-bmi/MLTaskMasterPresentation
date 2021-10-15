@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from sklearn.preprocessing import StandardScaler
 
 ALPHABET = ["A", "C", "G", "T"]
 
@@ -54,3 +55,14 @@ def test_kmer_encoding(encode_kmer_frequencies_func):
     assert np.allclose(encoded_test['encoded_data'], correct_encoded_data), "There is an error in the encoded data."
 
     print("k-mer encoding works!")
+
+
+def standardize(train_data: np.ndarray, test_data: np.ndarray):
+
+    if set(np.unique(train_data)) != {0, 1}:
+        scaler = StandardScaler()
+        scaled_train_data = scaler.fit_transform(train_data)
+        scaled_test_data = scaler.transform(test_data)
+        return scaled_train_data, scaled_test_data
+    else:
+        return train_data, test_data
